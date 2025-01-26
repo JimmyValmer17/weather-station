@@ -15,7 +15,7 @@ data_buffer = None
 
 
 # Funkcja obsługi notyfikacji, odbioru danych
-async def notification_handler(client, sender, data):
+async def  notification_handler(client, sender, data):
     global data_buffer
     timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
     message = data.decode("utf-8").strip()
@@ -29,7 +29,9 @@ async def notification_handler(client, sender, data):
                 print(f"Połączono ponownie z urządzeniem {DEVICE_MAC_ADDRESS}")
         except BleakError as e:
             print(f"Nie udało się połączyć: {e}")
-            await asyncio.sleep(2)  # Odczekaj przed kolejną próbą połączenia
+            await asyncio.sleep(2)
+
+
 
     # Łączenie danych z poprzednią częścią, jeśli istnieje bufor
     if data_buffer:
@@ -39,16 +41,19 @@ async def notification_handler(client, sender, data):
     # Sprawdzanie, czy dane są kompletne
     if message.count(",") < 4:  # Zakładam, że kompletne dane mają 4 wartości oddzielone przecinkami
         data_buffer = message  # Zapis do bufora, aby połączyć z kolejnymi danymi
-        print("Oczekiwanie na pełne dane...")
+        print("Dane sa kompletne")
         return
 
-    # Usuwanie nadmiarowych przecinków i zapis do pliku
     try:
-        while ',,' in message:
-            message = message.replace(',,', ',')
+        # Zapis do pliku
         with open("/root/Desktop/venv/venv/data.txt", "a") as file:
             file.write(f"{timestamp},{message}\n")
-        print(f"Otrzymano dane: {timestamp},{message}")
+
+        # Usunięcie nadmiarowych przecinków
+        while ',,' in message:
+            message = message.replace(',,', ',')
+            print(f"Otrzymano dane: {timestamp},{message}")
+            print("Oczekiwanie na dane...")
     except Exception as e:
         print(f"Błąd podczas zapisu do pliku: {e}")
 
