@@ -12,7 +12,7 @@ CHARACTERISTIC_UUID = "0000ffe1-0000-1000-8000-00805f9b34fb"  # Przykład UUID c
 # Zmienna globalna do przechowywania wartości
 data_buffer = None
 
-# Funkcja obsługi notyfikacji
+# Funkcja obsługi notyfikacji, odbioru danych
 def notification_handler(sender, data):
     global data_buffer
     timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
@@ -43,6 +43,7 @@ def notification_handler(sender, data):
         else:
             print("Oczekiwanie na pełne dane...")
 
+# Funkcja do łączenia się z blietooth
 async def connect_device():
     while True:
         try:
@@ -54,12 +55,12 @@ async def connect_device():
                 return client
         except BleakError:
             print("Nie udało się połączyć z urządzeniem!")
-        print("\n--- MENU ŁĄCZENIA ---")
-        print("1: Spróbuj ponownie")
-        print("0: Powrót do menu głównego")
-        choice = input("Wybierz opcję: ")
-        if choice == "0":
-            return None
+            print("\n--- MENU ŁĄCZENIA ---")
+            print("1: Spróbuj ponownie")
+            print("0: Powrót do menu głównego")
+            choice = input("Wybierz opcję: ")
+            if choice == "0":
+                return None
 
 async def main():
     client = None
