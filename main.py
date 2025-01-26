@@ -1,7 +1,7 @@
 import asyncio
 from bleak import BleakClient, BleakError
 from datetime import datetime
-
+#
 # Adres MAC urządzenia Bluetooth LE
 DEVICE_MAC_ADDRESS = "3C:A3:08:AA:00:2C"
 
