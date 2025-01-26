@@ -22,7 +22,7 @@ def notification_handler(sender, data):
     while ',,' in message:
         message = message.replace(',,', ',')
     try:
-        with open("data.txt", "a") as file:
+        with open("/root/Desktop/venv/venv/data.txt", "a") as file:
             file.write(f"{timestamp},{message}\n")
         print(f"Otrzymano dane: {timestamp},{message}")
         data_buffer = None
@@ -35,7 +35,7 @@ def notification_handler(sender, data):
             message = f"{data_buffer},{message}"
             data_buffer = None
             try:
-                with open("data.txt", "a") as file:
+                with open("/root/Desktop/venv/venv/data.txt", "a") as file:
                     file.write(f"{timestamp},{message}\n")
                 print(f"Otrzymano dane: {timestamp},{message}")
             except Exception as e:
