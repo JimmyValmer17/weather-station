@@ -36,7 +36,7 @@ def notification_handler(sender, data):
         # Zapis do pliku
         with open("/root/Desktop/venv/venv/data.txt", "a") as file:
             file.write(f"{timestamp},{message}\n")
-        print(f"Otrzymano dane: {timestamp},{message}")
+
         # Usunięcie nadmiarowych przecinków
         while ',,' in message:
             message = message.replace(',,', ',')
