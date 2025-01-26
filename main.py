@@ -18,23 +18,19 @@ def notification_handler(sender, data):
     timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
     message = data.decode("utf-8")
 
-    if ',' in message:
-        if data_buffer:
-            data_values = message.split(',')
-            data_values = [val.strip() for val in data_values if val.strip()]
-            message = ','.join(data_values).replace(',,', ',')
-            while ',,' in message:
-                message = message.replace(',,', ',')
-            try:
-                with open("data.txt", "a") as file:
-                    file.write(f"{timestamp},{message}\n")
-                print(f"Otrzymano dane: {timestamp},{message}")
-                data_buffer = None
-            except Exception as e:
-                print(f"Błąd podczas zapisu do pliku: {e}")
-        else:
-            data_buffer = message
+
+    while ',,' in message:
+        message = message.replace(',,', ',')
+    try:
+        with open("data.txt", "a") as file:
+            file.write(f"{timestamp},{message}\n")
+        print(f"Otrzymano dane: {timestamp},{message}")
+        data_buffer = None
+    except Exception as e:
+        print(f"Błąd podczas zapisu do pliku: {e}")
     else:
+        data_buffer = message
+
         if data_buffer:
             message = f"{data_buffer},{message}"
             data_buffer = None
