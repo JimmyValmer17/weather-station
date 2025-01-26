@@ -22,7 +22,7 @@ def notification_handler(sender, data):
 
     # Usunięcie nadmiarowych przecinków
     while ',,' in message:
-        message = message.replace(',,', ',')
+        message = message.replace(',,', '')
 
     # Łączenie danych z poprzednią częścią, jeśli istnieje bufor
     if data_buffer:
