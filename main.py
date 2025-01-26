@@ -29,7 +29,7 @@ def notification_handler(sender, data):
     # Sprawdzanie, czy dane są kompletne
     if message.count(",") < 4:  # Zakładam, że kompletne dane mają 4 wartości oddzielone przecinkami
         data_buffer = message  # Zapis do bufora, aby połączyć z kolejnymi danymi
-        print("Oczekiwanie na pełne dane...")
+        print("Dane sa kompletne")
         return
 
     try:
@@ -41,6 +41,7 @@ def notification_handler(sender, data):
         while ',,' in message:
             message = message.replace(',,', ',')
             print(f"Otrzymano dane: {timestamp},{message}")
+            print("Oczekiwanie na dane...")
     except Exception as e:
         print(f"Błąd podczas zapisu do pliku: {e}")
 
