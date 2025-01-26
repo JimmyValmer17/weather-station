@@ -15,22 +15,10 @@ data_buffer = None
 
 
 # Funkcja obsługi notyfikacji, odbioru danych
-def notification_handler(client, sender, data):
+def notification_handler( sender, data):
     global data_buffer
     timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
     message = data.decode("utf-8").strip()
-
-    # Sprawdzanie połączenia przed przetwarzaniem danych
-    while not client.is_connected:
-        print("Połączenie zostało zerwane. Trwa próba ponownego połączenia...")
-        try:
-            client.connect()
-            if client.is_connected:
-                print(f"Połączono ponownie z urządzeniem {DEVICE_MAC_ADDRESS}")
-        except BleakError as e:
-            print(f"Nie udało się połączyć: {e}")
-            asyncio.sleep(2)
-
 
 
     # Łączenie danych z poprzednią częścią, jeśli istnieje bufor
