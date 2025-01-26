@@ -1,7 +1,7 @@
 import asyncio
 from bleak import BleakClient, BleakError
 from datetime import datetime
-#
+
 # Adres MAC urządzenia Bluetooth LE
 DEVICE_MAC_ADDRESS = "3C:A3:08:AA:00:2C"
 
@@ -12,39 +12,40 @@ CHARACTERISTIC_UUID = "0000ffe1-0000-1000-8000-00805f9b34fb"  # Przykład UUID c
 # Zmienna globalna do przechowywania wartości
 data_buffer = None
 
+
+
 # Funkcja obsługi notyfikacji, odbioru danych
 def notification_handler(sender, data):
     global data_buffer
     timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
-    message = data.decode("utf-8")
+    message = data.decode("utf-8").strip()
 
-
+    # Usunięcie nadmiarowych przecinków
     while ',,' in message:
         message = message.replace(',,', ',')
+
+    # Łączenie danych z poprzednią częścią, jeśli istnieje bufor
+    if data_buffer:
+        message = f"{data_buffer},{message}"
+        data_buffer = None
+
+    # Sprawdzanie, czy dane są kompletne
+    if message.count(",") < 4:  # Zakładam, że kompletne dane mają 4 wartości oddzielone przecinkami
+        data_buffer = message  # Zapis do bufora, aby połączyć z kolejnymi danymi
+        print("Oczekiwanie na pełne dane...")
+        return
+
     try:
+        # Zapis do pliku
         with open("/root/Desktop/venv/venv/data.txt", "a") as file:
             file.write(f"{timestamp},{message}\n")
         print(f"Otrzymano dane: {timestamp},{message}")
-        data_buffer = None
     except Exception as e:
         print(f"Błąd podczas zapisu do pliku: {e}")
-    else:
-        data_buffer = message
-
-        if data_buffer:
-            message = f"{data_buffer},{message}"
-            data_buffer = None
-            try:
-                with open("/root/Desktop/venv/venv/data.txt", "a") as file:
-                    file.write(f"{timestamp},{message}\n")
-                print(f"Otrzymano dane: {timestamp},{message}")
-            except Exception as e:
-                print(f"Błąd podczas zapisu do pliku: {e}")
-        else:
-            print("Oczekiwanie na pełne dane...")
 
 
-from bleak import BleakClient, BleakError
+
+
 
 
 # Funkcja do łączenia się z Bluetooth
