@@ -20,9 +20,6 @@ def notification_handler(sender, data):
     timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
     message = data.decode("utf-8").strip()
 
-    # Usunięcie nadmiarowych przecinków
-    while ',,' in message:
-        message = message.replace(',,', '')
 
     # Łączenie danych z poprzednią częścią, jeśli istnieje bufor
     if data_buffer:
@@ -40,6 +37,10 @@ def notification_handler(sender, data):
         with open("/root/Desktop/venv/venv/data.txt", "a") as file:
             file.write(f"{timestamp},{message}\n")
         print(f"Otrzymano dane: {timestamp},{message}")
+        # Usunięcie nadmiarowych przecinków
+        while ',,' in message:
+            message = message.replace(',,', ',')
+            print(f"Otrzymano dane: {timestamp},{message}")
     except Exception as e:
         print(f"Błąd podczas zapisu do pliku: {e}")
 
