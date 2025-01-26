@@ -43,24 +43,41 @@ def notification_handler(sender, data):
         else:
             print("Oczekiwanie na pełne dane...")
 
-# Funkcja do łączenia się z blietooth
+
+from bleak import BleakClient, BleakError
+
+
+# Funkcja do łączenia się z Bluetooth
 async def connect_device():
     while True:
         try:
             print(f"Łączenie z urządzeniem {DEVICE_MAC_ADDRESS}...")
             client = BleakClient(DEVICE_MAC_ADDRESS)
+
+            # Próba nawiązania połączenia
             await client.connect()
+
+            # Sprawdzanie, czy połączenie się powiodło
             if client.is_connected:
                 print(f"Połączono z urządzeniem {DEVICE_MAC_ADDRESS}")
                 return client
-        except BleakError:
-            print("Nie udało się połączyć z urządzeniem!")
-            print("\n--- MENU ŁĄCZENIA ---")
-            print("1: Spróbuj ponownie")
-            print("0: Powrót do menu głównego")
-            choice = input("Wybierz opcję: ")
-            if choice == "0":
-                return None
+
+        except BleakError as e:
+            print(f"Nie udało się połączyć z urządzeniem: {e}")
+
+        except asyncio.TimeoutError:
+            print("Połączenie Bluetooth przekroczyło limit czasu!")
+
+        # Zapytanie użytkownika, czy chce spróbować ponownie
+        print("\n--- MENU ŁĄCZENIA ---")
+        print("1: Spróbuj ponownie")
+        print("0: Powrót do menu głównego")
+        choice = input("Wybierz opcję: ").strip()
+
+        if choice == "0":
+            print("Przerwano próbę połączenia.")
+            return None
+
 
 async def main():
     client = None
